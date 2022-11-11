@@ -1,13 +1,29 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Animated, {useAnimatedStyle} from 'react-native-reanimated';
+import {StyleSheet, Text, View} from 'react-native';
+import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
+import {useEffect} from "react";
+
+const FPS = 60;
+const DELTA = 1000 / FPS;
+const SPEED = 0.5;
 
 export default function App() {
+    const targetPositionX = useSharedValue(0);
+    const targetPositionY = useSharedValue(0);
+
+    useEffect(() => {
+        setInterval(update, DELTA);
+    }, []);
+
+    const update = () => {
+        targetPositionX.value = withTiming(targetPositionX.value + SPEED, {duration: DELTA, easing: Easing.linear});
+        targetPositionY.value = withTiming(targetPositionY.value + 10 * SPEED, {duration: DELTA, easing: Easing.linear});
+    }
 
     const ballAnimatedStyles = useAnimatedStyle(() => {
         return {
-            top: 200,
-            left: 160,
+            top: targetPositionY.value,
+            left: targetPositionX.value
         }
     });
 
