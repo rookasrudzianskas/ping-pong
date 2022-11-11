@@ -12,7 +12,8 @@ export default function App() {
     const targetPositionY = useSharedValue(0);
 
     useEffect(() => {
-        setInterval(update, DELTA);
+        const interval = setInterval(update, DELTA);
+        return () => clearInterval(interval);
     }, []);
 
     const update = () => {
