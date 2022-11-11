@@ -1,12 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 
 export default function App() {
-   // he are you in? are you working fine? is Github Copilot going to work?????
-    // no???? not working at all, so does it mean that I have to write all the code myself?????
+
+    const ballAnimatedStyles = useAnimatedStyle(() => {
+        return {
+            top: 200,
+            left: 160,
+        }
+    });
+
   return (
       <View className="items-center justify-center h-screen">
-        <View style={styles.ball} className="w-5 h-5 bg-black rounded-full"/>
+        <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full"/>
         <StatusBar style="auto" />
       </View>
   );
