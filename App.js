@@ -3,10 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+      <View className="items-center justify-center h-screen">
+        <View className="w-6 h-6 bg-black rounded-full"/>
+        <StatusBar style="auto" />
+      </View>
   );
 }
 
