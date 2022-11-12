@@ -5,10 +5,10 @@ import {useEffect} from "react";
 
 const FPS = 60;
 const DELTA = 1000 / FPS;
-const SPEED = 3;
+const SPEED = 10;
 const BALL_WIDTH = 20;
 
-const islandDimensions = { x: 100, y: 200, w: 200, h: 40};
+const islandDimensions = { x: 150, y: 11, w: 127, h: 37};
 
 const normalizeVector = (vector) => {
     // this is c in pythagorean theorem
@@ -54,26 +54,20 @@ export default function App() {
             nextPos.y < islandDimensions.y + islandDimensions.h &&
             BALL_WIDTH + nextPos.y > islandDimensions.y
         ) {
-            // Collision detected!
-            console.log("TOUCHED THE LEFT/RIGHT SIDE OF THE ISLAND");
-            const newDirection = { x: direction.value.x, y: -direction.value.y};
-            direction.value = newDirection;
-            nextPos = getNextPos(newDirection);
-        }
+            if(targetPositionX.value < islandDimensions.x || targetPositionX.value > islandDimensions.x + islandDimensions.w) {
+                console.log("HITTING FROM THE SIDE");
+                const newDirection = { x: -direction.value.x, y: direction.value.y};
+                direction.value = newDirection;
+                nextPos = getNextPos(newDirection);
+            } else {
+                // Collision detected!
+                console.log("TOUCHED THE BOTTOM TOP SIDE");
+                const newDirection = { x: direction.value.x, y: -direction.value.y};
+                direction.value = newDirection;
+                nextPos = getNextPos(newDirection);
+            }
 
-        // if (
-        //     nextPos.y < islandDimensions.y + islandDimensions.h &&
-        //     BALL_WIDTH + nextPos.y > islandDimensions.y
-        // ) {
-        //     // Collision detected!
-        //     console.log("TOUCHED THE TOP/BOTTOM OF THE ISLAND");
-        //     const newDirection = { x: -direction.value.x, y: direction.value.y};
-        //     direction.value = newDirection;
-        //     nextPos = getNextPos(newDirection);
-        // } else {
-        //     // No collision
-        //     // console.log("No collision");
-        // }
+        }
 
         targetPositionX.value = withTiming(nextPos.x, {duration: DELTA, easing: Easing.linear});
         targetPositionY.value = withTiming(nextPos.y, {duration: DELTA, easing: Easing.linear});
@@ -95,9 +89,7 @@ export default function App() {
 
   return (
       <View className="items-center justify-center h-screen">
-          <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full">
-              <View className="bg-red-500 absolute w-[100%] h-[100%]"></View>
-          </Animated.View>
+          <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />
 
           <View
               style={{
@@ -107,8 +99,12 @@ export default function App() {
                   width: islandDimensions.w,
                   height: islandDimensions.h,
                   backgroundColor: 'black',
+                  borderRadius: 20,
               }}
-          />
+              className="flex items-center justify-center"
+          >
+              <Text className="text-white font-bold text-lg tracking-widest">ISLAND</Text>
+          </View>
         <StatusBar style="auto" />
       </View>
   );
