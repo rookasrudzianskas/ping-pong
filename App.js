@@ -1,6 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
-import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
+import Animated, {
+    Easing,
+    useAnimatedGestureHandler,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming
+} from 'react-native-reanimated';
 import {useEffect} from "react";
 import {GestureHandlerRootView, PanGestureHandler} from "react-native-gesture-handler";
 
@@ -86,6 +92,18 @@ export default function App() {
         }
     });
 
+    const gestureHandler = useAnimatedGestureHandler({
+        onStart: (_, ctx) => {
+
+        },
+        onActive: (event, ctx) => {
+
+        },
+        onEnd: (event, ctx) => {
+
+        }
+    })
+
   return (
       <GestureHandlerRootView className="items-center justify-center h-screen">
           <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />
@@ -117,7 +135,7 @@ export default function App() {
                 borderRadius: 20,
             }}
           />
-          <PanGestureHandler>
+          <PanGestureHandler gesture={gestureHandler}>
               <View
                   style={{
                       position: 'absolute',
