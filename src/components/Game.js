@@ -131,15 +131,15 @@ const Game = () => {
 
     const islandAnimatedStyles = useAnimatedStyle(() => ({
         width: withSequence(
-            withTiming(islandDimensions.w * 1.3, { duration: 100 }),
-            withTiming(islandDimensions.w, { duration: 100 }),
+            withTiming(islandDimensions.w * 1.3),
+            withTiming(islandDimensions.w),
         ),
         height: withSequence(
-            withTiming(islandDimensions.h * 1.3, { duration: 100 }),
-            withTiming(islandDimensions.h, { duration: 100 }),
+            withTiming(islandDimensions.h * 1.3),
+            withTiming(islandDimensions.h),
         ),
-        opacity: withSequence(withTiming(0, { duration: 100 }),
-            withTiming(1, { duration: 100 }))
+        opacity: withSequence(withTiming(0),
+            withTiming(1))
     }), [score]);
 
     const gestureHandler = useAnimatedGestureHandler({
