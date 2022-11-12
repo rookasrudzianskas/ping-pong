@@ -132,7 +132,14 @@ const Game = () => {
         onEnd: (event, ctx) => {
 
         }
-    })
+    });
+
+    const restartGame = () => {
+        targetPositionX.value = width / 2;
+        targetPositionY.value = height / 2;
+        setScore(0);
+        setGameOver(false);
+    }
 
     return (
         <View className="items-center justify-center h-screen">
@@ -164,8 +171,8 @@ const Game = () => {
 
             {/* Player */}
             {gameOver ? (
-                <TouchableOpacity activeOpacity={0.7}>
-                    <Text>Restart</Text>
+                <TouchableOpacity className="bg-gray-300 px-10 py-4 rounded-xl my-12" activeOpacity={0.7} onPress={restartGame}>
+                    <Text className="font-bold text-white">Restart</Text>
                 </TouchableOpacity>
             ) : (
                 <Animated.View
