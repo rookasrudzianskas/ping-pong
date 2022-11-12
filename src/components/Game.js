@@ -130,17 +130,16 @@ const Game = () => {
     }));
 
     const islandAnimatedStyles = useAnimatedStyle(() => ({
-        width: withRepeat(
-            withSequence(
-                withTiming(islandDimensions.w * 1.2),
-                withTiming(islandDimensions.w),
-                ), 10),
-        height: withRepeat(
-            withSequence(
-                withTiming(islandDimensions.h * 1.2),
-                withTiming(islandDimensions.h),
-            ), 10),
-        opacity: withRepeat(withSequence(withTiming(0), withTiming(1)), 10),
+        width: withSequence(
+            withTiming(islandDimensions.w * 1.3, { duration: 100 }),
+            withTiming(islandDimensions.w, { duration: 100 }),
+        ),
+        height: withSequence(
+            withTiming(islandDimensions.h * 1.3, { duration: 100 }),
+            withTiming(islandDimensions.h, { duration: 100 }),
+        ),
+        opacity: withSequence(withTiming(0, { duration: 100 }),
+            withTiming(1, { duration: 100 }))
     }), [score]);
 
     const gestureHandler = useAnimatedGestureHandler({
@@ -183,15 +182,27 @@ const Game = () => {
                     backgroundColor: 'red',
                     borderRadius: 20,
                 }}
-                className="flex items-center justify-center"
+                // className="flex items-center justify-center"
             >
+            </View>
+
+            <View style={{
+                position: 'absolute',
+                top: 0,
+                width: islandDimensions.w + 50,
+                height: islandDimensions.h + 23,
+                alignItems: 'center',
+                justifyContent: 'center',
+            }} >
                 <Animated.View style={[{
-                    backgroundColor: 'red',
-                    borderRadius: 20,
+                    // position: 'absolute',
+                    backgroundColor: 'black',
+                    borderRadius: 50,
                 },
                     islandAnimatedStyles
                 ]}
-                                    className="flex items-center justify-center">
+                               className="flex items-center justify-center"
+                >
                     <Text className="text-white font-bold text-lg tracking-widest">ISLAND</Text>
                 </Animated.View>
             </View>
