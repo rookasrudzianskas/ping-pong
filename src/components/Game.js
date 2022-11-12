@@ -4,7 +4,7 @@ import Animated, {
     Easing,
     useAnimatedGestureHandler,
     useAnimatedStyle,
-    useSharedValue,
+    useSharedValue, withRepeat, withSequence,
     withTiming
 } from 'react-native-reanimated';
 import {useEffect, useState} from "react";
@@ -129,6 +129,20 @@ const Game = () => {
         left: playerPos.value.x,
     }));
 
+    const islandAnimatedStyles = useAnimatedStyle(() => ({
+        width: withRepeat(
+            withSequence(
+                withTiming(islandDimensions.w * 1.2),
+                withTiming(islandDimensions.w),
+                ), 10),
+        height: withRepeat(
+            withSequence(
+                withTiming(islandDimensions.h * 1.2),
+                withTiming(islandDimensions.h),
+            ), 10),
+        opacity: withRepeat(withSequence(withTiming(0), withTiming(1)), 10),
+    }), [score]);
+
     const gestureHandler = useAnimatedGestureHandler({
         onStart: (event, ctx) => {
 
@@ -161,20 +175,26 @@ const Game = () => {
 
             {!gameOver && (<Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />)}
 
-            <Animated.View
+            <View
                 style={{
                     position: 'absolute',
                     top: islandDimensions.y,
                     left: islandDimensions.x,
-                    width: withTiming(islandDimensions.w),
-                    height: withTiming(islandDimensions.h),
                     backgroundColor: 'red',
                     borderRadius: 20,
                 }}
                 className="flex items-center justify-center"
             >
-                <Text className="text-white font-bold text-lg tracking-widest">ISLAND</Text>
-            </Animated.View>
+                <Animated.View style={[{
+                    backgroundColor: 'red',
+                    borderRadius: 20,
+                },
+                    islandAnimatedStyles
+                ]}
+                                    className="flex items-center justify-center">
+                    <Text className="text-white font-bold text-lg tracking-widest">ISLAND</Text>
+                </Animated.View>
+            </View>
 
             {/* Player */}
             {gameOver ? (
