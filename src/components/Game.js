@@ -52,14 +52,18 @@ const Game = () => {
             }
         }, DELTA);
         return () => clearInterval(interval);
-    }, []);
+    }, [gameOver]);
 
     const update = () => {
         let nextPos = getNextPos(direction.value);
         let newDirection = direction.value;
 
         // Wall collision
-        if(nextPos.y < 0 || nextPos.y > height - BALL_WIDTH) {
+        if(nextPos.y > height - BALL_WIDTH) {
+            setGameOver(true);
+        }
+
+        if(nextPos.y < 0) {
             newDirection = { x: direction.value.x, y: -direction.value.y}
         }
 
