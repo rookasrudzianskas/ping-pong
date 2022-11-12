@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
 import {useEffect} from "react";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 const FPS = 60;
 const DELTA = 1000 / FPS;
@@ -21,6 +22,7 @@ const normalizeVector = (vector) => {
 
 export default function App() {
     const { height, width } = useWindowDimensions();
+    const PlayerDimensions = { x: width / 4, y: height - 100, w: width / 2, h: 37};
     const targetPositionX = useSharedValue(width / 2);
     const targetPositionY = useSharedValue(height / 2);
     const direction = useSharedValue(normalizeVector({
@@ -35,19 +37,18 @@ export default function App() {
 
     const update = () => {
         let nextPos = getNextPos(direction.value);
+        let newDirection = direction.value;
 
+        // Wall collision
         if(nextPos.y < 0 || nextPos.y > height - BALL_WIDTH) {
-            const newDirection = { x: direction.value.x, y: -direction.value.y}
-            direction.value = newDirection;
-            nextPos = getNextPos(newDirection);
+            newDirection = { x: direction.value.x, y: -direction.value.y}
         }
 
         if(nextPos.x < 0 || nextPos.x > width - BALL_WIDTH) {
-            const newDirection = { x: -direction.value.x, y: direction.value.y};
-            direction.value = newDirection;
-            nextPos = getNextPos(newDirection);
+            newDirection = { x: -direction.value.x, y: direction.value.y};
         }
 
+        // Island hit detection
         if (
             nextPos.x < islandDimensions.x + islandDimensions.w &&
             nextPos.x + BALL_WIDTH > islandDimensions.x &&
@@ -55,19 +56,17 @@ export default function App() {
             BALL_WIDTH + nextPos.y > islandDimensions.y
         ) {
             if(targetPositionX.value < islandDimensions.x || targetPositionX.value > islandDimensions.x + islandDimensions.w) {
-                console.log("HITTING FROM THE SIDE");
-                const newDirection = { x: -direction.value.x, y: direction.value.y};
-                direction.value = newDirection;
-                nextPos = getNextPos(newDirection);
+                // Collision with left or right side of island
+                newDirection = { x: -direction.value.x, y: direction.value.y};
             } else {
-                // Collision detected!
-                console.log("TOUCHED THE BOTTOM TOP SIDE");
-                const newDirection = { x: direction.value.x, y: -direction.value.y};
-                direction.value = newDirection;
-                nextPos = getNextPos(newDirection);
+                // Collision with top or bottom side of island
+                newDirection = { x: direction.value.x, y: -direction.value.y};
             }
 
         }
+
+        direction.value = newDirection;
+        nextPos = getNextPos(newDirection);
 
         targetPositionX.value = withTiming(nextPos.x, {duration: DELTA, easing: Easing.linear});
         targetPositionY.value = withTiming(nextPos.y, {duration: DELTA, easing: Easing.linear});
@@ -88,7 +87,7 @@ export default function App() {
     });
 
   return (
-      <View className="items-center justify-center h-screen">
+      <GestureHandlerRootView className="items-center justify-center h-screen">
           <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />
 
           <View
@@ -105,8 +104,21 @@ export default function App() {
           >
               <Text className="text-white font-bold text-lg tracking-widest">ISLAND</Text>
           </View>
+
+          {/* Player */}
+          <Animated.View
+            style={{
+                position: 'absolute',
+                top: PlayerDimensions.y,
+                left: PlayerDimensions.x,
+                width: PlayerDimensions.w,
+                height: PlayerDimensions.h,
+                backgroundColor: 'black',
+                borderRadius: 20,
+            }}
+          />
         <StatusBar style="auto" />
-      </View>
+      </GestureHandlerRootView>
   );
 }
 
