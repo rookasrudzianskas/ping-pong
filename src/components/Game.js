@@ -7,7 +7,7 @@ import Animated, {
     useSharedValue,
     withTiming
 } from 'react-native-reanimated';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {GestureHandlerRootView, PanGestureHandler} from "react-native-gesture-handler";
 
 const FPS = 60;
@@ -33,6 +33,8 @@ const Game = () => {
         x: width / 4,
         y: height - 100,
     });
+
+    const [score, setScore] = useState(0);
 
     const PlayerDimensions = { x: width / 4, y: height - 100, w: width / 2, h: 37};
     const targetPositionX = useSharedValue(width / 2);
@@ -74,6 +76,7 @@ const Game = () => {
                 // Collision with top or bottom side of island
                 newDirection = { x: direction.value.x, y: -direction.value.y};
             }
+            setScore((score) => score + 1);
         }
 
         // Player hit detection
@@ -131,6 +134,8 @@ const Game = () => {
 
     return (
         <View className="items-center justify-center h-screen">
+            <Text className="text-[300px] font-extralight text-gray-200 -mt-36">{score}</Text>
+
             <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />
 
             <View
