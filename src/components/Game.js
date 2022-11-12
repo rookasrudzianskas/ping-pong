@@ -35,6 +35,7 @@ const Game = () => {
     });
 
     const [score, setScore] = useState(0);
+    const [gameOver, setGameOver] = useState(true);
 
     const PlayerDimensions = { x: width / 4, y: height - 100, w: width / 2, h: 37};
     const targetPositionX = useSharedValue(width / 2);
@@ -134,7 +135,14 @@ const Game = () => {
 
     return (
         <View className="items-center justify-center h-screen">
-            <Text className="text-[300px] font-extralight text-gray-200 -mt-36">{score}</Text>
+            {gameOver ? (
+                <View className="justify-center items-center">
+                    <Text className="text-[100px] text-center font-extralight text-red-200 -mt-36">Game over</Text>
+                    <Text className="text-[50px] text-red-400">{score}</Text>
+                </View>
+            ) : (
+                <Text className="text-[300px] font-extralight text-gray-200 -mt-36">{score}</Text>
+            )}
 
             <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />
 
