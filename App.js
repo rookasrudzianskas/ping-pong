@@ -7,11 +7,17 @@ const FPS = 60;
 const DELTA = 1000 / FPS;
 const SPEED = 0.5;
 
+const normalizeVector = (vector) => {
+    const magnitude = Math.sqrt()
+}
+
 export default function App() {
     const targetPositionX = useSharedValue(0);
     const targetPositionY = useSharedValue(0);
-    const directionX = useSharedValue(0);
-    const directionY = useSharedValue(1);
+    const direction = useSharedValue({
+        x: 1,
+        y: 0,
+    });
 
     useEffect(() => {
         const interval = setInterval(update, DELTA);
@@ -19,8 +25,8 @@ export default function App() {
     }, []);
 
     const update = () => {
-        targetPositionX.value = withTiming(targetPositionX.value * SPEED, {duration: DELTA, easing: Easing.linear});
-        targetPositionY.value = withTiming(targetPositionY.value + 10 * SPEED, {duration: DELTA, easing: Easing.linear});
+        targetPositionX.value = withTiming(targetPositionX.value + directionX.value * SPEED, {duration: DELTA, easing: Easing.linear});
+        targetPositionY.value = withTiming(targetPositionY.value + directionY.value * SPEED, {duration: DELTA, easing: Easing.linear});
     }
 
     const ballAnimatedStyles = useAnimatedStyle(() => {
