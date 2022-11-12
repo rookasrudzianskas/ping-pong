@@ -161,20 +161,20 @@ const Game = () => {
 
             {!gameOver && (<Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />)}
 
-            <View
+            <Animated.View
                 style={{
                     position: 'absolute',
                     top: islandDimensions.y,
                     left: islandDimensions.x,
-                    width: islandDimensions.w,
-                    height: islandDimensions.h,
-                    backgroundColor: 'black',
+                    width: withTiming(islandDimensions.w),
+                    height: withTiming(islandDimensions.h),
+                    backgroundColor: 'red',
                     borderRadius: 20,
                 }}
                 className="flex items-center justify-center"
             >
                 <Text className="text-white font-bold text-lg tracking-widest">ISLAND</Text>
-            </View>
+            </Animated.View>
 
             {/* Player */}
             {gameOver ? (
