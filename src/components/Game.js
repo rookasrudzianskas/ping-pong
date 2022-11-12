@@ -74,7 +74,22 @@ const Game = () => {
                 // Collision with top or bottom side of island
                 newDirection = { x: direction.value.x, y: -direction.value.y};
             }
+        }
 
+        // Player hit detection
+        if (
+            nextPos.x < playerPos.value.x + PlayerDimensions.w &&
+            nextPos.x + BALL_WIDTH > playerPos.value.x &&
+            nextPos.y < playerPos.value.y + PlayerDimensions.h &&
+            BALL_WIDTH + nextPos.y > playerPos.value.y
+        ) {
+            if(targetPositionX.value < playerPos.value.x || targetPositionX.value > playerPos.value.x + PlayerDimensions.w) {
+                // Collision with left or right side of island
+                newDirection = { x: -direction.value.x, y: direction.value.y};
+            } else {
+                // Collision with top or bottom side of island
+                newDirection = { x: direction.value.x, y: -direction.value.y};
+            }
         }
 
         direction.value = newDirection;
