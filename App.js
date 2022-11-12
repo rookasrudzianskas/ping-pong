@@ -68,7 +68,7 @@ export default function App() {
       <View className="items-center justify-center h-screen">
         <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full"/>
 
-          <View className="w-44 h-10 rounded-4xl bg-black"/>
+          <View className="absolute top-[200px] left-[20px] w-44 h-10 rounded-4xl bg-black"/>
         <StatusBar style="auto" />
       </View>
   );
