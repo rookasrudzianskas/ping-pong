@@ -5,7 +5,8 @@ import {useEffect} from "react";
 
 const FPS = 60;
 const DELTA = 1000 / FPS;
-const SPEED = 6;
+const SPEED = 3;
+const BALL_WIDTH = 20;
 
 const normalizeVector = (vector) => {
     // this is c in pythagorean theorem
@@ -31,21 +32,29 @@ export default function App() {
     }, []);
 
     const update = () => {
-        const nextX = targetPositionX.value + direction.value.x * SPEED;
-        const nextY = targetPositionY.value + direction.value.y * SPEED;
+        let nextPos = getNextPos(direction.value);
 
-        if(nextY < 0 || nextY > height) {
-            console.log("WE HIT THE TOP WALL");
-            direction.value = { x: direction.value.x, y: -direction.value.y}
+        if(nextPos.y < 0 || nextPos.y > height - BALL_WIDTH) {
+            const newDirection = { x: direction.value.x, y: -direction.value.y}
+            direction.value = newDirection;
+            nextPos = getNextPos(newDirection);
         }
 
-        if(nextX < 0 || nextX > width) {
-            console.log("WE HIT THE SIDE WALL");
-            direction.value = { x: -direction.value.x, y: direction.value.y}
+        if(nextPos.x < 0 || nextPos.x > width - BALL_WIDTH) {
+            const newDirection = { x: -direction.value.x, y: direction.value.y};
+            direction.value = newDirection;
+            nextPos = getNextPos(newDirection);
         }
 
-        targetPositionX.value = withTiming(nextX, {duration: DELTA, easing: Easing.linear});
-        targetPositionY.value = withTiming(nextY, {duration: DELTA, easing: Easing.linear});
+        targetPositionX.value = withTiming(nextPos.x, {duration: DELTA, easing: Easing.linear});
+        targetPositionY.value = withTiming(nextPos.y, {duration: DELTA, easing: Easing.linear});
+    }
+
+    const getNextPos = (direction) => {
+        return {
+            x: targetPositionX.value + direction.x * SPEED,
+            y: targetPositionY.value + direction.y * SPEED,
+        }
     }
 
     const ballAnimatedStyles = useAnimatedStyle(() => {
