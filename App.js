@@ -8,16 +8,22 @@ const DELTA = 1000 / FPS;
 const SPEED = 0.5;
 
 const normalizeVector = (vector) => {
-    const magnitude = Math.sqrt()
+    // this is c in pythagorean theorem
+    const magnitude = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+    return ({
+        x: vector.x / magnitude,
+        y: vector.y / magnitude,
+    })
 }
 
 export default function App() {
     const targetPositionX = useSharedValue(0);
     const targetPositionY = useSharedValue(0);
-    const direction = useSharedValue({
-        x: 1,
-        y: 0,
-    });
+    const direction = useSharedValue(normalizeVector({
+        x: 100,
+        y: 150,
+    }));
+    console.log(JSON.stringify(direction));
 
     useEffect(() => {
         const interval = setInterval(update, DELTA);
@@ -25,8 +31,8 @@ export default function App() {
     }, []);
 
     const update = () => {
-        targetPositionX.value = withTiming(targetPositionX.value + directionX.value * SPEED, {duration: DELTA, easing: Easing.linear});
-        targetPositionY.value = withTiming(targetPositionY.value + directionY.value * SPEED, {duration: DELTA, easing: Easing.linear});
+        targetPositionX.value = withTiming(targetPositionX.value + direction.value.x * SPEED, {duration: DELTA, easing: Easing.linear});
+        targetPositionY.value = withTiming(targetPositionY.value + direction.value.y * SPEED, {duration: DELTA, easing: Easing.linear});
     }
 
     const ballAnimatedStyles = useAnimatedStyle(() => {
