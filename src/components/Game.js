@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import {StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native';
 import Animated, {
+    BounceIn,
     Easing,
     useAnimatedGestureHandler,
     useAnimatedStyle,
@@ -129,19 +130,6 @@ const Game = () => {
         left: playerPos.value.x,
     }));
 
-    const islandAnimatedStyles = useAnimatedStyle(() => ({
-        width: withSequence(
-            withTiming(islandDimensions.w * 1.3),
-            withTiming(islandDimensions.w),
-        ),
-        height: withSequence(
-            withTiming(islandDimensions.h * 1.3),
-            withTiming(islandDimensions.h),
-        ),
-        opacity: withSequence(withTiming(0),
-            withTiming(1))
-    }), [score]);
-
     const gestureHandler = useAnimatedGestureHandler({
         onStart: (event, ctx) => {
 
@@ -174,38 +162,22 @@ const Game = () => {
 
             {!gameOver && (<Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />)}
 
-            <View
-                style={{
-                    position: 'absolute',
-                    top: islandDimensions.y,
-                    left: islandDimensions.x,
-                    backgroundColor: 'red',
-                    borderRadius: 20,
+                <Animated.View
+                    entering={BounceIn}
+                    key={score}
+                    style={{
+                        position: 'absolute',
+                        backgroundColor: 'black',
+                        borderRadius: 50,
+                        top: islandDimensions.y,
+                        left: islandDimensions.x,
+                        width: islandDimensions.w,
+                        height: islandDimensions.h,
                 }}
-                // className="flex items-center justify-center"
-            >
-            </View>
-
-            <View style={{
-                position: 'absolute',
-                top: 0,
-                width: islandDimensions.w + 50,
-                height: islandDimensions.h + 23,
-                alignItems: 'center',
-                justifyContent: 'center',
-            }} >
-                <Animated.View style={[{
-                    // position: 'absolute',
-                    backgroundColor: 'black',
-                    borderRadius: 50,
-                },
-                    islandAnimatedStyles
-                ]}
                                className="flex items-center justify-center"
                 >
                     <Text className="text-white font-bold text-lg tracking-widest">ISLAND</Text>
                 </Animated.View>
-            </View>
 
             {/* Player */}
             {gameOver ? (
