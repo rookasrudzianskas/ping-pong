@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native';
 import Animated, {
     Easing,
     useAnimatedGestureHandler,
@@ -51,6 +51,7 @@ const Game = () => {
     }, []);
 
     const update = () => {
+        if(gameOver) return;
         let nextPos = getNextPos(direction.value);
         let newDirection = direction.value;
 
@@ -144,7 +145,7 @@ const Game = () => {
                 <Text className="text-[300px] font-extralight text-gray-200 -mt-36">{score}</Text>
             )}
 
-            <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />
+            {!gameOver && (<Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full" />)}
 
             <View
                 style={{
@@ -162,18 +163,24 @@ const Game = () => {
             </View>
 
             {/* Player */}
-            <Animated.View
-                style={[{
-                    position: 'absolute',
-                    top: playerPos.value.y,
-                    width: PlayerDimensions.w,
-                    height: PlayerDimensions.h,
-                    backgroundColor: 'black',
-                    borderRadius: 20,
-                },
-                    playerAnimatedStyles
-                ]}
-            />
+            {gameOver ? (
+                <TouchableOpacity activeOpacity={0.7}>
+                    <Text>Restart</Text>
+                </TouchableOpacity>
+            ) : (
+                <Animated.View
+                    style={[{
+                        position: 'absolute',
+                        top: playerPos.value.y,
+                        width: PlayerDimensions.w,
+                        height: PlayerDimensions.h,
+                        backgroundColor: 'black',
+                        borderRadius: 20,
+                    },
+                        playerAnimatedStyles
+                    ]}
+                />
+            )}
             <PanGestureHandler onGestureEvent={gestureHandler}>
                 <Animated.View
                     style={{
