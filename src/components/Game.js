@@ -28,6 +28,12 @@ const normalizeVector = (vector) => {
 
 const Game = () => {
     const { height, width } = useWindowDimensions();
+
+    const playerPos = useSharedValue({
+        x: width / 4,
+        y: height - 100,
+    });
+
     const PlayerDimensions = { x: width / 4, y: height - 100, w: width / 2, h: 37};
     const targetPositionX = useSharedValue(width / 2);
     const targetPositionY = useSharedValue(height / 2);
@@ -92,12 +98,16 @@ const Game = () => {
         }
     });
 
+    const playerAnimatedStyles = useAnimatedStyle(() => ({
+        left: playerPos.value.x,
+    }));
+
     const gestureHandler = useAnimatedGestureHandler({
-        onStart: (_, ctx) => {
-            console.log(`onStart`);
+        onStart: (event, ctx) => {
+
         },
         onActive: (event, ctx) => {
-
+            playerPos.value = {...playerPos.value, x: event.absoluteX - PlayerDimensions.w / 2};
         },
         onEnd: (event, ctx) => {
 
@@ -125,15 +135,16 @@ const Game = () => {
 
             {/* Player */}
             <Animated.View
-                style={{
+                style={[{
                     position: 'absolute',
-                    top: PlayerDimensions.y,
-                    left: PlayerDimensions.x,
+                    top: playerPos.value.y,
                     width: PlayerDimensions.w,
                     height: PlayerDimensions.h,
                     backgroundColor: 'black',
                     borderRadius: 20,
-                }}
+                },
+                    playerAnimatedStyles
+                ]}
             />
             <PanGestureHandler onGestureEvent={gestureHandler}>
                 <Animated.View
