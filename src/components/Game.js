@@ -46,12 +46,15 @@ const Game = () => {
     }));
 
     useEffect(() => {
-        const interval = setInterval(update, DELTA);
+        const interval = setInterval(() => {
+            if(!gameOver) {
+                update();
+            }
+        }, DELTA);
         return () => clearInterval(interval);
     }, []);
 
     const update = () => {
-        if(gameOver) return;
         let nextPos = getNextPos(direction.value);
         let newDirection = direction.value;
 
