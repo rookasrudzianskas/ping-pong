@@ -8,12 +8,7 @@ const DELTA = 1000 / FPS;
 const SPEED = 3;
 const BALL_WIDTH = 20;
 
-const islandPos = {
-    x: 100,
-    y: 200,
-}
-
-const islandDimensions = { x: 200, y: 40}
+const islandDimensions = { x: 100, y: 200, w: 200, h: 40};
 
 const normalizeVector = (vector) => {
     // this is c in pythagorean theorem
@@ -53,6 +48,32 @@ export default function App() {
             nextPos = getNextPos(newDirection);
         }
 
+        if (
+            nextPos.x < islandDimensions.x + islandDimensions.w &&
+            nextPos.x + BALL_WIDTH > islandDimensions.x
+        ) {
+            // Collision detected!
+            console.log("TOUCHED THE SIDE OF THE ISLAND");
+            const newDirection = { x: direction.value.x, y: -direction.value.y};
+            direction.value = newDirection;
+            nextPos = getNextPos(newDirection);
+        }
+
+        if (
+            nextPos.x < islandDimensions.x + islandDimensions.w &&
+            nextPos.x + BALL_WIDTH > islandDimensions.x &&
+            nextPos.y < islandDimensions.y + islandDimensions.h &&
+            BALL_WIDTH + nextPos.y > islandDimensions.y
+        ) {
+            // Collision detected!
+            const newDirection = { x: -direction.value.x, y: direction.value.y};
+            direction.value = newDirection;
+            nextPos = getNextPos(newDirection);
+        } else {
+            // No collision
+            // console.log("No collision");
+        }
+
         targetPositionX.value = withTiming(nextPos.x, {duration: DELTA, easing: Easing.linear});
         targetPositionY.value = withTiming(nextPos.y, {duration: DELTA, easing: Easing.linear});
     }
@@ -73,15 +94,17 @@ export default function App() {
 
   return (
       <View className="items-center justify-center h-screen">
-        <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full"/>
+          <Animated.View style={[styles.ball, ballAnimatedStyles]} className="w-5 h-5 bg-black rounded-full">
+              <View className="bg-red-500 absolute w-[100%] h-[100%]"></View>
+          </Animated.View>
 
           <View
               style={{
                   position: 'absolute',
-                  top: islandPos.y,
-                  left: islandPos.x,
-                  width: islandDimensions.x,
-                  height: islandDimensions.y,
+                  top: islandDimensions.y,
+                  left: islandDimensions.x,
+                  width: islandDimensions.w,
+                  height: islandDimensions.h,
                   backgroundColor: 'black',
               }}
           />
