@@ -20,9 +20,9 @@ const normalizeVector = (vector) => {
 }
 
 export default function App() {
-    const targetPositionX = useSharedValue(200);
-    const targetPositionY = useSharedValue(200);
     const { height, width } = useWindowDimensions();
+    const targetPositionX = useSharedValue(width / 2);
+    const targetPositionY = useSharedValue(height / 2);
     const direction = useSharedValue(normalizeVector({
         x: Math.random(),
         y: Math.random(),
@@ -50,29 +50,30 @@ export default function App() {
 
         if (
             nextPos.x < islandDimensions.x + islandDimensions.w &&
-            nextPos.x + BALL_WIDTH > islandDimensions.x
-        ) {
-            // Collision detected!
-            console.log("TOUCHED THE SIDE OF THE ISLAND");
-            const newDirection = { x: direction.value.x, y: -direction.value.y};
-            direction.value = newDirection;
-            nextPos = getNextPos(newDirection);
-        }
-
-        if (
-            nextPos.x < islandDimensions.x + islandDimensions.w &&
             nextPos.x + BALL_WIDTH > islandDimensions.x &&
             nextPos.y < islandDimensions.y + islandDimensions.h &&
             BALL_WIDTH + nextPos.y > islandDimensions.y
         ) {
             // Collision detected!
-            const newDirection = { x: -direction.value.x, y: direction.value.y};
+            console.log("TOUCHED THE LEFT/RIGHT SIDE OF THE ISLAND");
+            const newDirection = { x: direction.value.x, y: -direction.value.y};
             direction.value = newDirection;
             nextPos = getNextPos(newDirection);
-        } else {
-            // No collision
-            // console.log("No collision");
         }
+
+        // if (
+        //     nextPos.y < islandDimensions.y + islandDimensions.h &&
+        //     BALL_WIDTH + nextPos.y > islandDimensions.y
+        // ) {
+        //     // Collision detected!
+        //     console.log("TOUCHED THE TOP/BOTTOM OF THE ISLAND");
+        //     const newDirection = { x: -direction.value.x, y: direction.value.y};
+        //     direction.value = newDirection;
+        //     nextPos = getNextPos(newDirection);
+        // } else {
+        //     // No collision
+        //     // console.log("No collision");
+        // }
 
         targetPositionX.value = withTiming(nextPos.x, {duration: DELTA, easing: Easing.linear});
         targetPositionY.value = withTiming(nextPos.y, {duration: DELTA, easing: Easing.linear});
