@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
 import {useEffect} from "react";
-import {GestureHandlerRootView} from "react-native-gesture-handler";
+import {GestureHandlerRootView, PanGestureHandler} from "react-native-gesture-handler";
 
 const FPS = 60;
 const DELTA = 1000 / FPS;
@@ -117,6 +117,18 @@ export default function App() {
                 borderRadius: 20,
             }}
           />
+          <PanGestureHandler>
+              <View
+                  style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      width: '100%',
+                      height: 200,
+                      // backgroundColor: 'black',
+                  }}
+                >
+              </View>
+          </PanGestureHandler>
         <StatusBar style="auto" />
       </GestureHandlerRootView>
   );
